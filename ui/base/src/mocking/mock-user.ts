@@ -1,6 +1,6 @@
 import { Timestamp } from "@bufbuild/protobuf";
 import { Mocking } from "../shared/mocking";
-import { ListUserResponse, ListUserResponse_UserData } from "../dto/proto/simple-list-page/list-user_pb";
+import { ListUserResponse, ListUserResponse_UserData } from "../dto/proto/simple-list/list-user_pb";
 
 export function registerUserMocking() {
 

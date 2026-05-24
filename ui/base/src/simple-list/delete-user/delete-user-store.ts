@@ -1,7 +1,7 @@
 import { Executor } from '../../shared/executor';
 import type WaDrawer from '@awesome.me/webawesome/dist/components/drawer/drawer.js';
 import { Session } from '../../shared/session';
-import { DeleteUserRequest } from '../../dto/proto/simple-list-page/delete-user_pb';
+import { DeleteUserRequest } from '../../dto/proto/simple-list/delete-user_pb';
 
 export class DeleteUserStore {
 	deleteUserExecutor = new Executor('base/user/delete-user');

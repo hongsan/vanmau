@@ -9,7 +9,7 @@ import { navigate } from '../shared/navigation.js';
 import { homeContext, HomeStore } from './home-store.js';
 import './sidebar.js';
 
-import '../simple-list-page/user-list-page.js';
+import '../simple-list/user-list-page.js';
 
 @customElement('home-page')
 export class HomePage extends LitElement {

@@ -2,7 +2,7 @@ import { signal } from '@lit-labs/signals';
 import { Executor } from '../../shared/executor';
 import type WaDrawer from '@awesome.me/webawesome/dist/components/drawer/drawer.js';
 import { Session } from '../../shared/session';
-import { AddUserRequest } from '../../dto/proto/simple-list-page/add-user_pb';
+import { AddUserRequest } from '../../dto/proto/simple-list/add-user_pb';
 
 export class AddUserStore {
 	addUserExecutor = new Executor('base/user/add-user');

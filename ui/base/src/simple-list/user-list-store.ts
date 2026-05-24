@@ -1,7 +1,7 @@
 import { Fetcher } from "../shared/fetcher";
 import { signal } from "@lit-labs/signals";
 import { Session } from "../shared/session";
-import { ListUserRequest, ListUserResponse, type ListUserResponse_UserData } from "../dto/proto/simple-list-page/list-user_pb";
+import { ListUserRequest, ListUserResponse, type ListUserResponse_UserData } from "../dto/proto/simple-list/list-user_pb";
 
 export class UserListStore {
     listUserFetcher = new Fetcher('base/user/list-user');
