@@ -10,6 +10,16 @@ import { Message, proto3, protoInt64, Timestamp } from "@bufbuild/protobuf";
  * @generated from message ListPostRequest
  */
 export class ListPostRequest extends Message<ListPostRequest> {
+  /**
+   * @generated from field: bytes Position = 1;
+   */
+  Position = new Uint8Array(0);
+
+  /**
+   * @generated from field: int32 Count = 2;
+   */
+  Count = 0;
+
   constructor(data?: PartialMessage<ListPostRequest>) {
     super();
     proto3.util.initPartial(data, this);
@@ -18,6 +28,8 @@ export class ListPostRequest extends Message<ListPostRequest> {
   static readonly runtime: typeof proto3 = proto3;
   static readonly typeName = "ListPostRequest";
   static readonly fields: FieldList = proto3.util.newFieldList(() => [
+    { no: 1, name: "Position", kind: "scalar", T: 12 /* ScalarType.BYTES */ },
+    { no: 2, name: "Count", kind: "scalar", T: 5 /* ScalarType.INT32 */ },
   ]);
 
   static fromBinary(bytes: Uint8Array, options?: Partial<BinaryReadOptions>): ListPostRequest {
@@ -46,6 +58,11 @@ export class ListPostResponse extends Message<ListPostResponse> {
    */
   Posts: ListPostResponse_PostData[] = [];
 
+  /**
+   * @generated from field: bytes LastPosition = 2;
+   */
+  LastPosition = new Uint8Array(0);
+
   constructor(data?: PartialMessage<ListPostResponse>) {
     super();
     proto3.util.initPartial(data, this);
@@ -55,6 +72,7 @@ export class ListPostResponse extends Message<ListPostResponse> {
   static readonly typeName = "ListPostResponse";
   static readonly fields: FieldList = proto3.util.newFieldList(() => [
     { no: 1, name: "Posts", kind: "message", T: ListPostResponse_PostData, repeated: true },
+    { no: 2, name: "LastPosition", kind: "scalar", T: 12 /* ScalarType.BYTES */ },
   ]);
 
   static fromBinary(bytes: Uint8Array, options?: Partial<BinaryReadOptions>): ListPostResponse {

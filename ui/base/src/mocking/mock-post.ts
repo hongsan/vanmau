@@ -25,6 +25,7 @@ export function registerPostMocking() {
 					CreatedBy: {UserID: BigInt(3),Name: "Charlie"},
 					PublishedAt: Timestamp.fromDate(new Date("2024-01-03T14:00:00Z")),
 				})
-			]
+			],
+			LastPosition: new Uint8Array([97, 98, 99]),
 		})));
 }

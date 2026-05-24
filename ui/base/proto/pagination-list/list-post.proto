@@ -7,11 +7,16 @@ option  optimize_for = CODE_SIZE;
 
 import "google/protobuf/timestamp.proto";
 
-message ListPostRequest {}
+message ListPostRequest 
+{
+    bytes Position = 1;
+    int32 Count = 2;
+}
 
 message ListPostResponse
 {
     repeated PostData Posts = 1;
+    bytes LastPosition = 2;
 
     message PostData
     {

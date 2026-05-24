@@ -1,24 +1,55 @@
 import { Fetcher } from "../shared/fetcher";
 import { signal } from "@lit-labs/signals";
-import { Session } from "../shared/session";
 import { ListPostRequest, ListPostResponse, type ListPostResponse_PostData } from "../dto/proto/pagination-list/list-post_pb";
 
 export class PostListStore {
     listPostFetcher = new Fetcher('base/post/list-post');
     posts = signal<Array<ListPostResponse_PostData>>([]);
 
-    constructor() {
-        Session.events.addEventListener('post-added', () => {this.listPost();});
+    currentPage = signal(1);
+    lastPage= signal(false);
+    positions: Uint8Array<ArrayBuffer>[] = [];
+
+    setup() {
+        this.listPostFetcher.reset();
+        this.posts.set([]);
+        this.currentPage.set(1);
+        this.lastPage.set(false);
+        this.positions = [];
     }
 
 	listPost() {
 		if (this.listPostFetcher.loading.get()) return;
 
 		this.listPostFetcher.execute(
-            new ListPostRequest({}),
+            new ListPostRequest({
+                Count: 10,
+                Position: this.positions[this.positions.length - 1] || new Uint8Array()
+            }),
             new ListPostResponse(),
 		).then((response) => {
-            this.posts.set(response.Posts);
+            if (response.Posts.length === 0) {
+                this.lastPage.set(true);
+                this.positions.push(new Uint8Array());
+            } else {
+                this.posts.set(response.Posts);
+                this.positions.push(response.LastPosition);
+                if (response.LastPosition.length === 0) this.lastPage.set(true);
+                else this.lastPage.set(false);
+            }
         });
 	}
+
+    nextPage() {
+        if (this.listPostFetcher.loading.get() || this.lastPage.get()) return;
+        this.currentPage.set(this.currentPage.get() + 1);
+        this.listPost();
+    }
+    
+    previousPage() {
+        if (this.listPostFetcher.loading.get() || this.currentPage.get() === 1) return;
+        this.currentPage.set(this.currentPage.get() - 1);
+        this.positions.pop();
+        this.listPost();
+    }
 }

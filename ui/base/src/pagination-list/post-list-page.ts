@@ -10,6 +10,7 @@ export class PostListPage extends SignalWatcher(LitElement) {
 
 	override connectedCallback() {
 		super.connectedCallback();
+		this.store.setup();
 		this.store.listPost();
 	}
 
@@ -58,7 +59,17 @@ export class PostListPage extends SignalWatcher(LitElement) {
 			<div class="header">
 				<div class="title">Posts</div>
 				<div style="flex: 1;"></div>
-				<!-- You can add buttons or other controls in the header as needed -->
+				<div class="pagination">
+					<wa-button appearance="plain" size="small" pill @click=${() => this.store.previousPage()}
+						?disabled=${this.store.currentPage.get() === 1 || this.store.listPostFetcher.loading.get()}>
+						<wa-icon name="chevron-left"></wa-icon>
+					</wa-button>
+					<span style="margin: 0 8px;">Page ${this.store.currentPage.get()}</span>
+					<wa-button appearance="plain" size="small" pill @click=${() => this.store.nextPage()} 
+						?disabled=${this.store.lastPage.get() || this.store.listPostFetcher.loading.get()}>
+						<wa-icon name="chevron-right"></wa-icon>
+					</wa-button>
+				</div>
 			</div>
 
 			<div class="content">
@@ -146,6 +157,16 @@ export class PostListPage extends SignalWatcher(LitElement) {
 
 	.table-row:hover {
 		background-color: var(--wa-color-gray-95);
+	}
+
+	.pagination {
+		display: flex;
+		align-items: center;
+		flex-direction: row;
+		font-family: sans-serif;
+		color: var(--wa-color-gray-30);
+		font-size: 16px;
+		gap: 4px;
 	}
 `;
 
