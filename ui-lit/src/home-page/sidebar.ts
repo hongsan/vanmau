@@ -37,10 +37,12 @@ export class SideBar extends SignalWatcher(LitElement) {
 					</button>
 				</div>
 				<div class="menu-list">
-					<div class="section-title">${msg('Pages')}</div>
+					<div class="section-title">${msg('General')}</div>
 					<menu-item .collapsed=${this.collapsed} page="/home/users" title=${msg('Users')} icon="user"></menu-item>
-					<menu-item .collapsed=${this.collapsed} page="/home/posts" title=${msg('Posts')} icon="file-alt"></menu-item>
 					<menu-item .collapsed=${this.collapsed} page="/home/departments" title=${msg('Departments')} icon="building"></menu-item>
+          <div class="section-title">${msg('Posts')}</div>
+          <menu-item .collapsed=${this.collapsed} page="/home/posts" title=${msg('Editing')} icon="file-alt"></menu-item>
+          <menu-item .collapsed=${this.collapsed} page="/home/published-posts" title=${msg('Published')} icon="file-alt"></menu-item>
 				</div>
 				<div class="sidebar-footer">
            <div class="user-section">
