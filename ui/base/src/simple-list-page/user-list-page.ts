@@ -170,7 +170,7 @@ export class UserListPage extends SignalWatcher(LitElement) {
 	}
 
 	.table-row:hover {
-		background-color: var(--wa-color-red-95);
+		background-color: var(--wa-color-gray-95);
 	}
 `;
 
