@@ -53,7 +53,7 @@ export class UserListPage extends SignalWatcher(LitElement) {
 						<div style="flex: 1;">Name</div>
 						<div style="width: 300px;">Email</div>
 						<div style="width: 200px;">Added At</div>
-						<div style="width: 50px;"></div>
+						<div style="width: 30px;"></div>
 					</div>
 					<div class="table-body">
 						${repeat(this.store.users.get(), user => html`
@@ -61,7 +61,7 @@ export class UserListPage extends SignalWatcher(LitElement) {
 								<div style="flex: 1;">${user.Name}</div>
 								<div style="width: 300px;">${user.Email}</div>
 								<div style="width: 200px;">${user.AddedAt?.toDate().toLocaleString()}</div>
-								<div style="width: 50px;">
+								<div style="width: 30px;">
 									<wa-button variant="danger" appearance="plain" size="small" pill 
 										@click=${() => this.#onDeleteClicked(user.UserID)}>
 										<wa-icon name="trash" ></wa-icon>

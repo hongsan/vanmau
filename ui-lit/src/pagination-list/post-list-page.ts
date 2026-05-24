@@ -41,7 +41,6 @@ export class PostListPage extends SignalWatcher(LitElement) {
 						<div style="flex: 1;">Title</div>
 						<div style="width: 300px;">Created By</div>
 						<div style="width: 200px;">Published At</div>
-						<div style="width: 30px;"></div>
 					</div>
 					<div class="table-body">
 						${repeat(this.store.posts.get(), post => html`
@@ -49,11 +48,6 @@ export class PostListPage extends SignalWatcher(LitElement) {
 								<div style="flex: 1;">${post.Title}</div>
 								<div style="width: 300px;">${post.CreatedBy?.Name}</div>
 								<div style="width: 200px;">${post.PublishedAt?.toDate().toLocaleString()}</div>
-								<div style="width: 30px;">
-									<wa-button appearance="plain" variant="danger" size="small" pill @click=${() => {}}>
-										<wa-icon name="trash"></wa-icon>
-									</wa-button>
-								</div>
 							</div>
 						`)}
 					</div>
