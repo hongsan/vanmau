@@ -1,6 +1,6 @@
 import '@awesome.me/webawesome/dist/styles/themes/default.css';
 import '@awesome.me/webawesome/dist/styles/webawesome.css';
-import { Router, Routes } from '@lit-labs/router';
+import { Router } from '@lit-labs/router';
 import { css, html, LitElement } from 'lit';
 import { customElement } from 'lit/decorators.js';
 import './home-page/home-page.js';
