@@ -4,6 +4,7 @@ import { PostListStore } from './post-list-store.js';
 import { SignalWatcher } from '@lit-labs/signals';
 import { repeat } from 'lit/directives/repeat.js';
 import './post-search-page.js';
+import { navigate } from '../shared/navigation.js';
 
 @customElement('post-list-page')
 export class PostListPage extends SignalWatcher(LitElement) {
@@ -44,7 +45,7 @@ export class PostListPage extends SignalWatcher(LitElement) {
 					</div>
 					<div class="table-body">
 						${repeat(this.store.posts.get(), post => html`
-							<div class="table-row">
+							<div class="table-row" @click=${() => {navigate(`/post/${post.PostID}`)}}>
 								<div style="flex: 1;">${post.Title}</div>
 								<div style="width: 300px;">${post.CreatedBy?.Name}</div>
 								<div style="width: 200px;">${post.PublishedAt?.toDate().toLocaleString()}</div>
@@ -165,7 +166,7 @@ export class PostListPage extends SignalWatcher(LitElement) {
 		font-family: sans-serif;
 		border-bottom: 1px solid var(--wa-color-gray-95);
 		height: 40px;
-		//cursor: pointer;
+		cursor: pointer;
 		color: var(--wa-color-gray-30);
 		font-size: 14px;
 	}

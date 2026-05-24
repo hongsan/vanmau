@@ -5,6 +5,7 @@ import { css, html, LitElement } from 'lit';
 import { customElement } from 'lit/decorators.js';
 import './home-page/home-page.js';
 import './login-page/login-page.js';
+import './detail-page/edit-post-page.js';
 import { navigate } from './shared/navigation.js';
 import { Session } from './shared/session.js';
 import { SignalWatcher } from '@lit-labs/signals';
@@ -27,6 +28,13 @@ export class BaseApp extends SignalWatcher(LitElement) {
 		this,
 		[
 			{
+				path: '/',
+				render: () => {
+					location.replace(`/login`);
+					return null;
+				}
+			},
+			{
 				path: '/login',
 				enter: async () => {
 					await Session.reset();
@@ -48,11 +56,9 @@ export class BaseApp extends SignalWatcher(LitElement) {
 				}
 			},
 			{
-				path: '/',
-				render: () => {
-					location.replace(`/login`);
-					return null;
-				}
+				path: '/post/:id',
+				enter: this.checkLogin,
+				render: ({ id }) => html`<edit-post-page .id=${id || ''}></edit-post-page>`,
 			},
 		]
 	);
