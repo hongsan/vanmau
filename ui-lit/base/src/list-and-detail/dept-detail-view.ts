@@ -1,102 +1,72 @@
 import { LitElement, css, html } from 'lit';
-import { customElement } from 'lit/decorators.js';
-import { DeptListStore } from './dept-list-store';
-
-import './dept-list-view';
-import './dept-detail-view';
+import { customElement, property } from 'lit/decorators.js';
 import { SignalWatcher } from '@lit-labs/signals';
+import { DeptDetailStore } from './dept-detail-store';
 
-@customElement('dept-list-page')
-export class DeptListPage extends SignalWatcher(LitElement) {
+@customElement('dept-detail-view')
+export class DeptDetailView extends SignalWatcher(LitElement) {
+	
+	@property({ attribute: false })
+	deptId: bigint = 0n;	
 
-	private store = new DeptListStore();
+	store=new DeptDetailStore();
 
-	connectedCallback() {
-		super.connectedCallback();
-		this.store.reset();
-		this.store.listDept();
+	willUpdate(changedProperties: Map<string, unknown>) {
+		if (changedProperties.has('deptId') && this.store) {
+			this.store.setup(this.deptId);
+			this.store.getDept();
+		}
 	}
 
-	renderBody() {
-		if (this.store.listDeptFetcher.loading.get()) return html`
+	render() {
+		if (this.store.getDeptFetcher.loading.get()) return html`
 			<div class="empty-or-error">
 				<wa-spinner style="font-size: 3rem;"></wa-spinner>
 			</div>
 		`;
 		
-		if (this.store.listDeptFetcher.error.get()) return html`
+		if (this.store.getDeptFetcher.error.get()) return html`
 			<div class="empty-or-error">
-				<div style="padding: 16px; color: var(--wa-color-red-50);">Error: ${this.store.listDeptFetcher.error.get()}</div>
-			</div>
-		`;
-
-		if (this.store.depts.get().length === 0) return html`
-			<div class="empty-or-error">
-				<div style="padding: 16px; color: var(--wa-color-gray-30);">No departments found.</div>
+				<div style="padding: 16px; color: var(--wa-color-red-50);">Error: ${this.store.getDeptFetcher.error.get()}</div>
 			</div>
 		`;
 
 		return html`
-			<dept-list-view .store=${this.store}></dept-list-view>
-			<dept-detail-view .deptId=${this.store.selected.get()?.DeptID || 0n}></dept-detail-view>
+			<div class="panel-header">
+				<h3>${this.store.dept.get().Name}</h3>
+			</div>
+			<div class="panel-body">
+				<div class="section-header">
+					<div class="section-title">General</div>
+					<div style="flex: 1;"></div>
+					<div class="section-text-action">Edit</div>
+				</div>
+				<div class="section-body"></div>
+
+				<div class="section-header">
+					<div class="section-title">Body</div>
+					<div style="flex: 1;"></div>
+					<div class="section-text-action">Preview</div>
+					<div class="section-text-action">Delete</div>
+				</div>
+				<div class="section-body"></div>
+
+				<div class="section-header">
+					<div class="section-title">Others</div>
+					<div style="flex: 1;"></div>
+					<div class="section-text-action">Add</div>
+				</div>
+				<div class="section-body"></div>
+				<div style="height: 16px;"></div>
+				</div>
+			</div>
 		`;
 	}
 
-	render() {
-		return html`
-			<div class="header">
-				<h2>Departments</h2>
-				<div style="flex:1;"></div>
-				<div class="section-text-action">Do Something Here</div>
-			</div>
-
-			<div class="content">
-				${this.renderBody()}
-			</div>
-		`;
-	}
 	static override styles = css`
 		:host {
 			display: flex;
 			flex-direction: column;
-			height: 100%;
-			background-color: transparent;
-		}
-
-		.header {
-			display: flex;
-			align-items: center;
-			flex-direction: row;
-			background-color: white;
-			padding: 0px 16px 0px 16px;
-			font-family: sans-serif;
-			border-radius: 0 0 0 var(--wa-border-radius-l);
-			margin-bottom: 8px;
-			border-top: 1px solid var(--wa-color-gray-90);
-			border-bottom: 1px solid var(--wa-color-gray-90);
-			border-left: 1px solid var(--wa-color-gray-90);
-			height: 56px;
-		}
-
-		.header h2 {
-			margin: 0;
-			font-size: 20px;
-			color: var(--wa-color-gray-30);
-			font-weight: 400;
-		}
-
-		.content {
-			flex: 1;
-			overflow: hidden;
-			display: flex;
-			gap: 8px;
-			font-family: sans-serif;
-		}
-
-		.empty-or-error {
-			display: flex;
-			align-items: center;
-			justify-content: center;
 			width: 100%;
 			border-radius: var(--wa-border-radius-l) 0 0 var(--wa-border-radius-l);
 			background-color: white;
@@ -105,15 +75,12 @@ export class DeptListPage extends SignalWatcher(LitElement) {
 			margin-bottom: 8px;
 		}
 
-		.list-column {
+		.empty-or-error {
 			display: flex;
-			flex-direction: column;
-			width: 300px;
-			border-radius: var(--wa-border-radius-l);
-			background-color: white;
-			border: 1px solid var(--wa-color-gray-90);
-			overflow: hidden;
-			margin-bottom: 8px;
+			align-items: center;
+			justify-content: center;
+			width: 100%;
+			height: 100%;
 		}
 
 		.detail-column {
@@ -242,6 +209,8 @@ export class DeptListPage extends SignalWatcher(LitElement) {
 			border-radius: var(--wa-border-radius-l) 0 0 var(--wa-border-radius-l);
 			//border-radius: var(--wa-border-radius-l);
 		}
+
+		
 	`;
 
 

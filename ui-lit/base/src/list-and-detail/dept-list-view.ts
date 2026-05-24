@@ -9,12 +9,6 @@ export class DeptListView extends SignalWatcher(LitElement) {
 
 	@property({ type: Object })	store: DeptListStore | null = null;
 
-	connectedCallback() {
-		super.connectedCallback();
-		this.store?.reset();
-		this.store?.listDept();
-	}
-
 	render() {
 		return html`
 			<div class="panel-header">
@@ -27,18 +21,6 @@ export class DeptListView extends SignalWatcher(LitElement) {
 	}
 
 	renderList() {
-		if (this.store?.listDeptFetcher.loading.get()) return html`
-			<div style="display: flex; align-items: center; justify-content: center; height: 100%;">
-				<wa-spinner style="font-size: 3rem;"></wa-spinner>
-			</div>
-		`;
-
-		if (this.store?.listDeptFetcher.error.get()) return html`
-			<div style="display: flex; align-items: center; justify-content: center; height: 100%;">
-				<div style="padding: 16px; color: var(--wa-color-red-50);">Error: ${this.store?.listDeptFetcher.error.get()}</div>
-			</div>
-		`;
-
 		return html`
 			${repeat(this.store?.depts.get() || [], dept => html`
 				<div class="list-item ${this.store?.selected.get() === dept ? ' selected' : ''}"
@@ -50,7 +32,7 @@ export class DeptListView extends SignalWatcher(LitElement) {
 		:host {
 			display: flex;
 			flex-direction: column;
-			width: 300px;
+			width: 400px;
 			border-radius: var(--wa-border-radius-l);
 			background-color: white;
 			border: 1px solid var(--wa-color-gray-90);
