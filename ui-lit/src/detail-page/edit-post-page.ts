@@ -24,7 +24,7 @@ export class EditPostPage extends SignalWatcher(LitElement) {
 				<div class="header">
 					<div class="title">Edit Post Page</div>
 					<div style="flex: 1;"></div>
-					<button class="back-home" @click=${() => navigate('/home/signal-page')}>
+					<button class="back-home" @click=${() => navigate('/home/posts')}>
 						<wa-icon name="arrow-left"></wa-icon>
 						<span>Back to home page</span>
 					</button>
