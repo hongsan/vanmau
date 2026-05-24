@@ -47,7 +47,7 @@ export class DeptListPage extends SignalWatcher(LitElement) {
 			<div class="header">
 				<h2>Departments</h2>
 				<div style="flex:1;"></div>
-				<div class="section-text-action">Do Something Here</div>
+				<div class="section-text-action" @click=${() => this.store.listDept()}>Refresh</div>
 			</div>
 
 			<div class="content">

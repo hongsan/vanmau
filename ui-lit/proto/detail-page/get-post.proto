@@ -1,0 +1,19 @@
+syntax = "proto3";
+option  java_package = "base.post.dto";
+option  java_multiple_files = true;
+option  csharp_namespace = "base.post.dto";
+option  go_package = "./;dto";
+option  optimize_for = CODE_SIZE;
+
+message GetPostRequest 
+{
+    int64 PostID = 1;
+}
+
+message GetPostResponse
+{
+    int64 PostID = 1;
+    string Title = 2;
+    string Description = 3;
+}
+

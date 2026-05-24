@@ -2,6 +2,7 @@ import { Timestamp } from "@bufbuild/protobuf";
 import { Mocking } from "../shared/mocking";
 import { ListPostResponse, ListPostResponse_PostData } from "../dto/proto/pagination-list/list-post_pb";
 import { SearchPostResponse, SearchPostResponse_PostData } from "../dto/proto/pagination-list/search-post_pb";
+import { GetPostResponse } from "../dto/proto/detail-page/get-post_pb";
 
 export function registerPostMocking() {
 
@@ -58,4 +59,13 @@ export function registerPostMocking() {
 			})
 		]}))
 	);
+
+//	Mocking.register("base/post/get-post", Mocking.failEndpoint("Error","Fail to get post"));
+	Mocking.register("base/post/get-post", Mocking.successFetcher(
+	new GetPostResponse({
+		PostID: BigInt(1),
+		Title: "First Post",
+		Description: "This is the description of the first post."
+	})));
+
 }

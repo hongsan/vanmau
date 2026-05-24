@@ -6,6 +6,9 @@ import { navigate } from '../shared/navigation.js';
 import { EditPostStore} from './edit-post-store.js';
 import { SignalWatcher } from '@lit-labs/signals';
 
+import './image-list-view.js';
+import './edit-post-view.js';
+
 @customElement('edit-post-page')
 export class EditPostPage extends SignalWatcher(LitElement) {
 
@@ -14,71 +17,73 @@ export class EditPostPage extends SignalWatcher(LitElement) {
 
 	store = new EditPostStore();
 
-	override willUpdate() {
+	connectedCallback() {
+		super.connectedCallback();
 		this.store.setup(this.id);
+		this.store.load();
+	}
+
+	renderBody() {
+		if (this.store.getPostFetcher.loading.get()) return html`
+			<div class="empty-or-error">
+				<wa-spinner style="font-size: 3rem;"></wa-spinner>
+			</div>
+		`;
+
+		if (this.store.getPostFetcher.error.get()) return html`
+			<div class="empty-or-error">
+				<div style="padding: 16px; color: var(--wa-color-red-50);">Error: ${this.store.getPostFetcher.error.get()}</div>
+			</div>
+		`;
+
+		return html`
+			<div class="content">
+				<edit-post-view .store=${this.store}></edit-post-view>
+				<image-list-view .store=${this.store}></image-list-view>
+			</div>
+		`;
 	}
 
 	render() {
 		return html`
-			<div class="page-shell">
-				<div class="header">
-					<div class="title">Edit Post Page</div>
-					<div style="flex: 1;"></div>
-					<button class="back-home" @click=${() => navigate('/home/posts')}>
-						<wa-icon name="arrow-left"></wa-icon>
-						<span>Back to home page</span>
-					</button>
-				</div>
-				<div class="content">
-					<p>
-						This is Demo 7 page with route param id:
-						<span class="demo-id">${this.store.id || '-'}</span>
-					</p>
-				</div>
+			<div class="header">
+				<wa-button appearance="plain" variant="neutral" size="small" pill @click=${() => navigate('/home/posts')}>
+					<wa-icon name="arrow-left"></wa-icon>
+				</wa-button>
+				<div style="width: 8px;"></div>
+				<div class="title">Edit Post</div>
+				<div style="flex: 1;"></div>
+				<!-- <button class="back-home" @click=${() => navigate('/home/posts')}>
+					<wa-icon name="arrow-left"></wa-icon>
+					<span>Back to home page</span>
+				</button> -->
 			</div>
+			${this.renderBody()}
 		`;
 	}
 
 	static override styles = css`
 	:host {
-		display: block;
-		height: 100dvh;
-		overflow: hidden;
-	}
-
-	.page-shell {
-		height: 100%;
 		display: flex;
-		flex-direction: column;
+		height: 100vh;
 		overflow: hidden;
 		background-color: var(--wa-color-gray-95);
+		flex-direction: column;
 	}
 
-	.back-home {
+	.empty-or-error {
+		flex: 1;
 		display: flex;
 		align-items: center;
-		gap: 8px;
-		padding: 8px;
-		border: none;
-		background: transparent;
-		font-size: 13px;
-		font-weight: 600;
-		color: #334155;
-		cursor: pointer;
-		border-radius: var(--wa-border-radius-l);
-		transition: background 150ms ease, color 150ms ease;
-	}
-
-	.back-home:hover {
-		background: var(--wa-color-gray-90);
-		color: #0f172a;
-	}
-
-	.main {
-		display: flex;
-		flex-direction: column;
-		min-height: 0;
-		overflow: hidden;
+		justify-content: center;
+		font-family: sans-serif;
+		margin-left: 8px;
+		border-radius: var(--wa-border-radius-l) 0 0 var(--wa-border-radius-l);
+		background-color: white;
+		margin-bottom: 8px;
+		border-top: 1px solid var(--wa-color-gray-90);
+		border-bottom: 1px solid var(--wa-color-gray-90);
+		border-left: 1px solid var(--wa-color-gray-90);
 	}
 
 	.header {
@@ -97,32 +102,14 @@ export class EditPostPage extends SignalWatcher(LitElement) {
 		margin-left: 8px;
 	}
 
-	.title {
-		margin: 0;
-		font-size: 20px;
-		color: var(--wa-color-gray-30);
-		font-weight: 400;
-	}
 
 	.content {
 		flex: 1;
-		overflow-y: auto;
-		padding: 24px;
-		font-family: sans-serif;
-		margin-left: 8px;
-		border-radius: var(--wa-border-radius-l) 0 0 var(--wa-border-radius-l);
-		background-color: white;
+		display: flex;
+		flex-direction: row;
 		margin-bottom: 8px;
-		border-top: 1px solid var(--wa-color-gray-90);
-		border-bottom: 1px solid var(--wa-color-gray-90);
-		border-left: 1px solid var(--wa-color-gray-90);
+		margin-left: 8px;
+		/* background-color: var(--wa-color-red-60); */
 	}
-
-	.demo-id {
-		font-weight: 700;
-		color: #0f172a;
-	}
-
 	`;
-
 }

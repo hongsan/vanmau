@@ -12,7 +12,7 @@ rm -rf ./src/dto
 mkdir -p ./src/dto
 
 #scyna error
-cp ../../scyna/proto/error.proto proto
+cp ../scyna/proto/error.proto proto
 
 # Generate using protoc directly to handle duplicates
 find proto -name "*.proto" -exec protoc --plugin=./node_modules/.bin/protoc-gen-es --es_out=src/dto --es_opt=target=ts {} \;

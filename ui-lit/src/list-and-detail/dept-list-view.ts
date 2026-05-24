@@ -13,6 +13,17 @@ export class DeptListView extends SignalWatcher(LitElement) {
 		return html`
 			<div class="panel-header">
 				<h3>Departments</h3>
+				<div style="flex: 1;"></div>
+				<wa-button variant="neutral" appearance="plain" size="small" pill @click=${() => {}}>
+					<wa-icon name="magnifying-glass"></wa-icon>
+				</wa-button>
+
+				<wa-button variant="neutral" appearance="plain" size="small" pill @click=${() => {}}>
+					<wa-icon name="add"></wa-icon>
+				</wa-button>
+				<!-- <wa-button variant="neutral" appearance="plain" size="small" pill @click=${() => this.store?.listDept()}>
+					<wa-icon name="refresh"></wa-icon>
+				</wa-button> -->
 			</div>
 			<div class="panel-body">
 				${this.renderList()}
@@ -43,7 +54,7 @@ export class DeptListView extends SignalWatcher(LitElement) {
 		.panel-header {
 			display: flex;
 			align-items: center;
-			padding: 0px 16px;
+			padding: 4px 4px 4px 16px;
 			height: 40px;
 			border-bottom: 1px solid var(--wa-color-red-90);
 		}
