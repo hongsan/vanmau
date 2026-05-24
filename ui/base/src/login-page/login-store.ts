@@ -43,7 +43,7 @@ export class LoginStore {
 				response.UserID,
 				response.Name,
 			);
-			navigate('/home/signal-page');
+			navigate('/home/users');
 			return true;
 		}).catch((e: ScynaError) => {
 			this.error.set(e.Message);

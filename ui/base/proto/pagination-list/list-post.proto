@@ -1,0 +1,30 @@
+syntax = "proto3";
+option  java_package = "base.user.cm.dto";
+option  java_multiple_files = true;
+option  csharp_namespace = "base.user.cm.dto";
+option  go_package = "./;dto";
+option  optimize_for = CODE_SIZE;
+
+import "google/protobuf/timestamp.proto";
+
+message ListPostRequest {}
+
+message ListPostResponse
+{
+    repeated PostData Posts = 1;
+
+    message PostData
+    {
+        int64 PostID = 1;
+        string Title = 2;
+        AuthorData CreatedBy = 3;
+        google.protobuf.Timestamp PublishedAt = 4;
+
+        message AuthorData
+        {
+            int64 UserID = 1;
+            string Name = 2;
+        }
+    }
+}
+

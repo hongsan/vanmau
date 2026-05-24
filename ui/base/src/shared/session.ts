@@ -5,6 +5,7 @@ import { Error as ScynaError } from '../dto/proto/error_pb';
 import { registerAuthenticate } from '../mocking/mockAuthenticate';
 import { Mocking } from './mocking';
 import { registerUserMocking } from '../mocking/mock-user';
+import { registerPostMocking } from '../mocking/mock-post';
 
 type FetchFunction = <Response extends Message<Response>>(
 	api: string,
@@ -17,9 +18,10 @@ type ExecuteFunction = (api: string, request: Message) => Promise<void>;
 function registerMocking() {
 	registerAuthenticate();
 	registerUserMocking();
+	registerPostMocking();
 }
 const DEFAULT_BASE_URL = (import.meta.env.VITE_BASE_URL ?? '').toString().trim();
-const ROLE = 'employee'; /* currently we only have employee role, will add more if needed */
+const ROLE = 'user';
 
 class SessionStore {
 	baseUrl: string = DEFAULT_BASE_URL;
@@ -27,12 +29,9 @@ class SessionStore {
 	userID = protoInt64.zero;
 	name = signal('');
 	email = '';
-	jobTitle = '';
-	officeLocation = '';
 	token: string | null = null;
 	isLoggedIn: boolean = false;
 	isInitialized: boolean = false;
-	language = signal('en');
 
 	fetch: FetchFunction = this.fetchFromServer;
 	execute: ExecuteFunction = this.executeFromServer;
@@ -58,9 +57,6 @@ class SessionStore {
 			this.email = session.email;
 			this.userID = BigInt(session.userId);
 			this.name.set(session.name);
-			this.jobTitle = session.jobTitle;
-			this.officeLocation = session.officeLocation;
-			this.language.set(session.language ?? 'en');
 			this.isLoggedIn = true;
 
 			// if (this.baseUrl != 'mocking')

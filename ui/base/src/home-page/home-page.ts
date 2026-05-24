@@ -10,6 +10,7 @@ import { homeContext, HomeStore } from './home-store.js';
 import './sidebar.js';
 
 import '../simple-list/user-list-page.js';
+import '../pagination-list/post-list-page.js';
 
 @customElement('home-page')
 export class HomePage extends LitElement {
@@ -20,14 +21,19 @@ export class HomePage extends LitElement {
 			{
 				path: '',
 				render: () => {
-					navigate('/home/user-list-page', { replace: true });
+					navigate('/home/users', { replace: true });
 					return null;
 				}
 			},
 			{
-				path: 'user-list-page',
+				path: 'users',
 				render: () => html`<user-list-page></user-list-page>`,
 			},
+			{
+				path: 'posts',
+				render: () => html`<post-list-page></post-list-page>`,
+			},
+
 		]
 	);
 
