@@ -1,37 +1,41 @@
 import { LitElement, css, html } from 'lit';
-import { customElement} from 'lit/decorators.js';
+import { customElement, property} from 'lit/decorators.js';
 import { PostListStore } from './post-list-store';
 import { SignalWatcher } from '@lit-labs/signals';
-import { repeat } from 'lit/directives/repeat.js';
-import './post-search-page.js';
 
-@customElement('post-list-page')
-export class PostListPage extends SignalWatcher(LitElement) {
-	private store = new PostListStore();
+@customElement('post-search-page')
+export class PostSearchPage extends SignalWatcher(LitElement) {
 
-	override connectedCallback() {
-		super.connectedCallback();
-		this.store.setup();
-		this.store.listPost();
+	@property({ type: Object })
+	store = new PostListStore();
+
+	#searchCommited(e: Event) {
+		this.store.searchPosts((e.target as HTMLInputElement).value);
 	}
 
 	renderBody() {
-		if (this.store.listPostFetcher.loading.get()) return html`
+		if (this.store.searchPostFetcher.loading.get()) return html`
 			<div style="display: flex; align-items: center; justify-content: center; height: 100%;">
 				<wa-spinner style="font-size: 3rem;"></wa-spinner>
 			</div>
 		`;
 
-		if (this.store.listPostFetcher.success.get() && this.store.posts.get().length === 0) return html`
+		if (this.store.searchPostFetcher.success.get() && (!this.store.founds.get() || this.store.founds.get()!.length === 0)) return html`
 		<div style="display: flex; align-items: center; justify-content: center; height: 100%;">
 			<div style="padding: 16px; color: var(--wa-color-gray-30);">No posts found.</div>
 		</div>
 			
 		`;
 
-		if (this.store.listPostFetcher.error.get()) return html`
+		if (this.store.searchPostFetcher.error.get()) return html`
 			<div style="display: flex; align-items: center; justify-content: center; height: 100%;">
-				<div style="padding: 16px; color: var(--wa-color-red-50);">Error loading posts: ${this.store.listPostFetcher.error.get()}</div>
+				<div style="padding: 16px; color: var(--wa-color-red-50);">Error loading posts: ${this.store.searchPostFetcher.error.get()}</div>
+			</div>
+		`;
+
+		if (this.store.founds.get() === null) return html`
+			<div style="display: flex; align-items: center; justify-content: center; height: 100%;">
+				<div style="padding: 16px; color: var(--wa-color-gray-30);">Please enter a search query.</div>
 			</div>
 		`;
 
@@ -42,13 +46,13 @@ export class PostListPage extends SignalWatcher(LitElement) {
 						<div style="width: 200px;">Published At</div>
 					</div>
 					<div class="table-body">
-						${repeat(this.store.posts.get(), post => html`
+						${this.store.founds.get() ? this.store.founds.get()!.map(post => html`
 							<div class="table-row">
 								<div style="flex: 1;">${post.Title}</div>
 								<div style="width: 300px;">${post.CreatedBy?.Name}</div>
 								<div style="width: 200px;">${post.PublishedAt?.toDate().toLocaleString()}</div>
 							</div>
-						`)}
+						`) : ''}
 					</div>
 
 			</div>
@@ -56,35 +60,21 @@ export class PostListPage extends SignalWatcher(LitElement) {
 	}
 
 	override render() {
-		if (this.store.searching.get())
-			return html`<post-search-page .store=${this.store}></post-search-page>`;
-
 		return html`
 			<div class="header">
-				<div class="title">Posts</div>
+				<wa-icon name="magnifying-glass" style="margin-right: 4px;"></wa-icon>
+				<input placeholder="Search posts..." .value=${''} style="flex: 1; border: none; outline: none; font-size: 18px;"
+					@input=${this.#searchCommited}>
 				<div style="flex: 1;"></div>
-				<wa-button appearance="plain" size="small" @click=${() => {this.store.startSearch()}} pill>
-					<wa-icon name="magnifying-glass" style="margin-right: 4px;"></wa-icon>
+				<wa-button appearance="plain" size="small" @click=${() => {this.store.endSearch()}} pill>
+					<wa-icon name="close" style="margin-right: 4px;"></wa-icon>
 				</wa-button>
-
-				<div class="pagination">
-					<wa-button appearance="plain" size="small" pill @click=${() => this.store.previousPage()}
-						?disabled=${this.store.currentPage.get() === 1 || this.store.listPostFetcher.loading.get()}>
-						<wa-icon name="chevron-left"></wa-icon>
-					</wa-button>
-					<span style="margin: 0 8px;">Page ${this.store.currentPage.get()}</span>
-					<wa-button appearance="plain" size="small" pill @click=${() => this.store.nextPage()} 
-						?disabled=${this.store.lastPage.get() || this.store.listPostFetcher.loading.get()}>
-						<wa-icon name="chevron-right"></wa-icon>
-					</wa-button>
-				</div>
 			</div>
 
 			<div class="content">
 				${this.renderBody()}
 			</div>
 		`;
-
 	}
 
 	static override styles = css`

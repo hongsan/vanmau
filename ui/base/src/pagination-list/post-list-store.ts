@@ -1,6 +1,7 @@
 import { Fetcher } from "../shared/fetcher";
 import { signal } from "@lit-labs/signals";
 import { ListPostRequest, ListPostResponse, type ListPostResponse_PostData } from "../dto/proto/pagination-list/list-post_pb";
+import { SearchPostRequest, SearchPostResponse, type SearchPostResponse_PostData } from "../dto/proto/pagination-list/search-post_pb";
 
 export class PostListStore {
     listPostFetcher = new Fetcher('base/post/list-post');
@@ -10,12 +11,17 @@ export class PostListStore {
     lastPage= signal(false);
     positions: Uint8Array<ArrayBuffer>[] = [];
 
+    searching = signal(false);
+    founds = signal<Array<SearchPostResponse_PostData> | null>(null);
+    searchPostFetcher = new Fetcher('base/post/search-post');
+
     setup() {
         this.listPostFetcher.reset();
         this.posts.set([]);
         this.currentPage.set(1);
         this.lastPage.set(false);
         this.positions = [];
+        this.searching.set(false);
     }
 
 	listPost() {
@@ -51,5 +57,27 @@ export class PostListStore {
         this.currentPage.set(this.currentPage.get() - 1);
         this.positions.pop();
         this.listPost();
+    }
+
+    startSearch() {
+        this.searchPostFetcher.reset();
+        this.searching.set(true);
+    }
+
+    endSearch() {
+        this.searchPostFetcher.reset();
+        this.searching.set(false);
+        this.founds.set(null);
+    }
+
+    searchPosts(query: string) {
+        if (this.searchPostFetcher.loading.get()) return;
+
+        this.searchPostFetcher.execute(
+            new SearchPostRequest({Query: query}),
+            new SearchPostResponse(),
+        ).then((response) => {
+            this.founds.set(response.Posts);
+        });
     }
 }
