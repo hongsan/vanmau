@@ -11,6 +11,7 @@ import './sidebar.js';
 
 import '../simple-list/user-list-page.js';
 import '../pagination-list/post-list-page.js';
+import '../list-and-detail/dept-list-page.js';
 
 @customElement('home-page')
 export class HomePage extends LitElement {
@@ -33,6 +34,11 @@ export class HomePage extends LitElement {
 				path: 'posts',
 				render: () => html`<post-list-page></post-list-page>`,
 			},
+			{
+				path: 'departments',
+				render: () => html`<dept-list-page></dept-list-page>`,
+			},
+
 
 		]
 	);

@@ -6,6 +6,7 @@ import { registerAuthenticate } from '../mocking/mock-authenticate';
 import { Mocking } from './mocking';
 import { registerUserMocking } from '../mocking/mock-user';
 import { registerPostMocking } from '../mocking/mock-post';
+import { registerDeptMocking } from '../mocking/mock-dept';
 
 type FetchFunction = <Response extends Message<Response>>(
 	api: string,
@@ -19,6 +20,7 @@ function registerMocking() {
 	registerAuthenticate();
 	registerUserMocking();
 	registerPostMocking();
+	registerDeptMocking();
 }
 const DEFAULT_BASE_URL = (import.meta.env.VITE_BASE_URL ?? '').toString().trim();
 const ROLE = 'user';

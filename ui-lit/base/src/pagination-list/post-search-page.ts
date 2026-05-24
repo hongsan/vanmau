@@ -8,34 +8,34 @@ export class PostSearchPage extends SignalWatcher(LitElement) {
 	@query('#search-input') searchInput!: HTMLInputElement;
 
 	@property({ type: Object })
-	store = new PostListStore();
+	store: PostListStore | null = null;
 
 	#onSearchInput(e: Event) {
 		const query = (e.target as HTMLInputElement).value;
-		if (query === '') this.store.endSearch();
-		else this.store.searchPosts(query);
+		if (query === '') this.store?.endSearch();
+		else this.store?.searchPosts(query);
 	}
 
 	renderBody() {
-		if (this.store.searchPostFetcher.loading.get()) return html`
+		if (this.store?.searchPostFetcher.loading.get()) return html`
 			<div style="display: flex; align-items: center; justify-content: center; height: 100%;">
 				<wa-spinner style="font-size: 3rem;"></wa-spinner>
 			</div>
 		`;
 
-		if (this.store.searchPostFetcher.success.get() && (!this.store.founds.get() || this.store.founds.get()!.length === 0)) return html`
+		if (this.store?.searchPostFetcher.success.get() && (!this.store?.founds.get() || this.store?.founds.get()!.length === 0)) return html`
 		<div style="display: flex; align-items: center; justify-content: center; height: 100%;">
 			<div style="padding: 16px; color: var(--wa-color-gray-30);">No posts found.</div>
 		</div>
 		`;
 
-		if (this.store.searchPostFetcher.error.get()) return html`
+		if (this.store?.searchPostFetcher.error.get()) return html`
 			<div style="display: flex; align-items: center; justify-content: center; height: 100%;">
-				<div style="padding: 16px; color: var(--wa-color-red-50);">Error loading posts: ${this.store.searchPostFetcher.error.get()}</div>
+				<div style="padding: 16px; color: var(--wa-color-red-50);">Error: ${this.store?.searchPostFetcher.error.get()}</div>
 			</div>
 		`;
 
-		if (this.store.founds.get() === null) return html`
+		if (this.store?.founds.get() === null) return html`
 			<div style="display: flex; align-items: center; justify-content: center; height: 100%;">
 				<div style="padding: 16px; color: var(--wa-color-gray-30);">Please enter a search query.</div>
 			</div>
@@ -48,7 +48,7 @@ export class PostSearchPage extends SignalWatcher(LitElement) {
 						<div style="width: 200px;">Published At</div>
 					</div>
 					<div class="table-body">
-						${this.store.founds.get() ? this.store.founds.get()!.map(post => html`
+						${this.store?.founds.get() ? this.store.founds.get()!.map(post => html`
 							<div class="table-row">
 								<div style="flex: 1;">${post.Title}</div>
 								<div style="width: 300px;">${post.CreatedBy?.Name}</div>
@@ -67,7 +67,7 @@ export class PostSearchPage extends SignalWatcher(LitElement) {
 				<wa-icon name="magnifying-glass" style="margin-right: 4px;"></wa-icon>
 				<input id="search-input" placeholder="Search posts..." .value=${''} style="flex: 1; border: none; outline: none; font-size: 18px;"
 					@input=${this.#onSearchInput} autofocus>
-				<wa-button appearance="plain" size="small" @click=${() => {this.store.endSearch()}} pill>
+				<wa-button appearance="plain" size="small" @click=${() => {this.store?.endSearch()}} pill>
 					<wa-icon name="close" style="margin-right: 4px;"></wa-icon>
 				</wa-button>
 			</div>
