@@ -102,6 +102,9 @@ export class EditPostPage extends SignalWatcher(LitElement) {
 		margin-left: 8px;
 	}
 
+	.title {
+		font-size: 20px;
+	}
 
 	.content {
 		flex: 1;
