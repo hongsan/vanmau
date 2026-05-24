@@ -2,7 +2,7 @@ import { Message, protoInt64 } from '@bufbuild/protobuf';
 import { signal } from '@lit-labs/signals';
 import axios, { AxiosError } from 'axios';
 import { Error as ScynaError } from '../dto/proto/error_pb';
-import { registerAuthenticate } from '../mocking/mockAuthenticate';
+import { registerAuthenticate } from '../mocking/mock-authenticate';
 import { Mocking } from './mocking';
 import { registerUserMocking } from '../mocking/mock-user';
 import { registerPostMocking } from '../mocking/mock-post';

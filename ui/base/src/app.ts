@@ -1,6 +1,6 @@
 import '@awesome.me/webawesome/dist/styles/themes/default.css';
 import '@awesome.me/webawesome/dist/styles/webawesome.css';
-import { Router } from '@lit-labs/router';
+import { Router, Routes } from '@lit-labs/router';
 import { css, html, LitElement } from 'lit';
 import { customElement } from 'lit/decorators.js';
 import './home-page/home-page.js';
@@ -43,19 +43,9 @@ export class BaseApp extends SignalWatcher(LitElement) {
 				path: '/home',
 				enter: this.checkLogin,
 				render: () => {
-					location.replace(`/home/editing-page`);
+					location.replace(`/home/users`);
 					return null;
 				}
-			},
-			{
-				path: '/page',
-				enter: this.checkLogin,
-				render: () => html`<separated-sidebar-page></separated-sidebar-page>`,
-			},
-			{
-				path: '/page/:id',
-				enter: this.checkLogin,
-				render: ({ id }) => html`<separated-page .id=${id as string}></separated-page>`,
 			},
 			{
 				path: '/',
@@ -67,7 +57,7 @@ export class BaseApp extends SignalWatcher(LitElement) {
 		]
 	);
 
-	override render() {
+	render() {
 		return this.router.outlet();
 	}
 

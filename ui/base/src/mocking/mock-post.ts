@@ -1,6 +1,7 @@
 import { Timestamp } from "@bufbuild/protobuf";
 import { Mocking } from "../shared/mocking";
 import { ListPostResponse, ListPostResponse_PostData } from "../dto/proto/pagination-list/list-post_pb";
+import { SearchPostResponse, SearchPostResponse_PostData } from "../dto/proto/pagination-list/search-post_pb";
 
 export function registerPostMocking() {
 
@@ -28,4 +29,29 @@ export function registerPostMocking() {
 			],
 			LastPosition: new Uint8Array([97, 98, 99]),
 		})));
+
+		Mocking.register("base/post/search-post", Mocking.successFetcher(
+		new SearchPostResponse({
+			Posts: [
+				new SearchPostResponse_PostData({
+					PostID: BigInt(1),
+					Title: "First Post",
+					CreatedBy: {UserID: BigInt(1),Name: "Alice"},
+					PublishedAt: Timestamp.fromDate(new Date("2024-01-01T10:00:00Z")),
+				}),
+				new SearchPostResponse_PostData({
+					PostID: BigInt(2),
+					Title: "Second Post",
+					CreatedBy: {UserID: BigInt(2),Name: "Bob"},
+					PublishedAt: Timestamp.fromDate(new Date("2024-01-02T12:00:00Z")),
+				}),
+				new SearchPostResponse_PostData({
+					PostID: BigInt(3),
+					Title: "Third Post",
+					CreatedBy: {UserID: BigInt(3),Name: "Charlie"},
+					PublishedAt: Timestamp.fromDate(new Date("2024-01-03T14:00:00Z")),
+				})
+			]
+		})));
+
 }

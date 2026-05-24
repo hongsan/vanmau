@@ -1,7 +1,7 @@
 import '@awesome.me/webawesome/dist/components/button/button.js';
 import '@awesome.me/webawesome/dist/components/card/card.js';
 import '@awesome.me/webawesome/dist/components/icon/icon.js';
-import { Router } from '@lit-labs/router';
+import { Routes } from '@lit-labs/router';
 import { provide } from '@lit/context';
 import { css, html, LitElement } from 'lit';
 import { customElement } from 'lit/decorators.js';
@@ -15,8 +15,8 @@ import '../pagination-list/post-list-page.js';
 @customElement('home-page')
 export class HomePage extends LitElement {
 	@provide({ context: homeContext })
-	private _store = new HomeStore();
-	private _router = new Router(this,
+	private store = new HomeStore();
+	private routes = new Routes(this,
 		[
 			{
 				path: '',
@@ -38,13 +38,13 @@ export class HomePage extends LitElement {
 	);
 
 	override render() {
-		void this._store;
+		void this.store;
 
 		return html`
 			<div class="home-shell">
 				<side-bar></side-bar>
 				<main class="content-area">
-					${this._router.outlet()}
+					${this.routes.outlet()}
 				</main>
 			</div>
 		`;

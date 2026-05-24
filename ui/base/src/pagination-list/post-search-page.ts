@@ -1,16 +1,19 @@
 import { LitElement, css, html } from 'lit';
-import { customElement, property} from 'lit/decorators.js';
+import { customElement, property, query} from 'lit/decorators.js';
 import { PostListStore } from './post-list-store';
 import { SignalWatcher } from '@lit-labs/signals';
 
 @customElement('post-search-page')
 export class PostSearchPage extends SignalWatcher(LitElement) {
+	@query('#search-input') searchInput!: HTMLInputElement;
 
 	@property({ type: Object })
 	store = new PostListStore();
 
-	#searchCommited(e: Event) {
-		this.store.searchPosts((e.target as HTMLInputElement).value);
+	#onSearchInput(e: Event) {
+		const query = (e.target as HTMLInputElement).value;
+		if (query === '') this.store.endSearch();
+		else this.store.searchPosts(query);
 	}
 
 	renderBody() {
@@ -24,7 +27,6 @@ export class PostSearchPage extends SignalWatcher(LitElement) {
 		<div style="display: flex; align-items: center; justify-content: center; height: 100%;">
 			<div style="padding: 16px; color: var(--wa-color-gray-30);">No posts found.</div>
 		</div>
-			
 		`;
 
 		if (this.store.searchPostFetcher.error.get()) return html`
@@ -63,9 +65,8 @@ export class PostSearchPage extends SignalWatcher(LitElement) {
 		return html`
 			<div class="header">
 				<wa-icon name="magnifying-glass" style="margin-right: 4px;"></wa-icon>
-				<input placeholder="Search posts..." .value=${''} style="flex: 1; border: none; outline: none; font-size: 18px;"
-					@input=${this.#searchCommited}>
-				<div style="flex: 1;"></div>
+				<input id="search-input" placeholder="Search posts..." .value=${''} style="flex: 1; border: none; outline: none; font-size: 18px;"
+					@input=${this.#onSearchInput} autofocus>
 				<wa-button appearance="plain" size="small" @click=${() => {this.store.endSearch()}} pill>
 					<wa-icon name="close" style="margin-right: 4px;"></wa-icon>
 				</wa-button>
