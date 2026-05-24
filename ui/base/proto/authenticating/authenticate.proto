@@ -1,0 +1,26 @@
+syntax = "proto3";
+option  java_package = "base.authenticating.cm.dto";
+option  java_multiple_files = true;
+option  csharp_namespace = "base.authenticating.cm.dto";
+option  go_package = "./;dto";
+option  optimize_for = CODE_SIZE;
+
+message AuthenticateUserRequest 
+{
+	string Email = 1;
+    string Password = 2;
+}
+
+message AuthenticateUserResponse
+{
+    string 	Token = 1;
+    string 	Name = 2;
+    int64 	UserID = 3;
+}
+
+message LogoutUserRequest {}
+
+message RenewUserSessionRequest 
+{
+	string Token = 1;
+}

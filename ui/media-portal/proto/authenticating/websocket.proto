@@ -1,0 +1,18 @@
+syntax = "proto3";
+option  java_package = "poc.authenticating.dto";
+option  java_multiple_files = true;
+option csharp_namespace = "poc.authenticating.dto";
+option  go_package = "./;dto";
+option  optimize_for = CODE_SIZE;
+
+message ControlMessage
+{
+    string Type = 1; /*PING, PONG, COMMAND*/
+    bytes Data = 2;
+}
+
+message PushEvent /*server => client*/
+{
+    string Channel = 1;
+    bytes Data = 2;
+}

@@ -1,0 +1,121 @@
+package scyna
+
+import (
+	"bytes"
+	"fmt"
+	"io"
+	"log"
+	"net/http"
+	"strings"
+	"time"
+
+	"github.com/nats-io/nats.go"
+	scyna_const "github.com/scyna/core/const"
+	scyna_proto "github.com/scyna/core/proto"
+	"google.golang.org/protobuf/proto"
+)
+
+type RemoteConfig struct {
+	ManagerUrl string
+	Name       string
+	Secret     string
+}
+
+func TestInit(config RemoteConfig) {
+	testMode = true
+	RemoteInit(config)
+}
+
+func RemoteInit(config RemoteConfig) {
+	log.Println(config.ManagerUrl)
+
+	request := scyna_proto.CreateSessionRequest{
+		Module: config.Name,
+		Secret: config.Secret,
+	}
+
+	data, err := proto.Marshal(&request)
+	if err != nil {
+		log.Fatal("Bad authentication request")
+	}
+
+	req, err := http.NewRequest("POST", config.ManagerUrl+scyna_const.SESSION_CREATE_URL, bytes.NewBuffer(data))
+	if err != nil {
+		log.Fatal("Error in create http request:", err)
+	}
+
+	res, err := HttpClient().Do(req)
+	if err != nil {
+		log.Fatal("Error in send http request:", err)
+	}
+
+	if res.StatusCode != 200 {
+		log.Println(res.StatusCode)
+		log.Println(res.Body)
+		log.Fatal("Error in autheticate")
+	}
+
+	resBody, err := io.ReadAll(res.Body)
+	if err != nil {
+		log.Fatal("Can not read response body:", err)
+	}
+
+	var response scyna_proto.CreateSessionResponse
+	if err := proto.Unmarshal(resBody, &response); err != nil {
+		log.Fatal("Authenticate error")
+	}
+
+	Session = NewSession(response.SessionID)
+	DirectInit(config.Name, response.Config)
+}
+
+func DirectInit(name string, c *scyna_proto.Configuration) {
+	module = name
+	var err error
+	var nats_ []string
+	for _, n := range strings.Split(c.NatsUrl, ",") {
+		fmt.Printf("Nats configuration: nats://%s:4222\n", n)
+		nats_ = append(nats_, fmt.Sprintf("nats://%s:4222", n))
+	}
+
+	if c.NatsUsername != "" && c.NatsPassword != "" {
+		Nats, err = nats.Connect(strings.Join(nats_, ","), nats.UserInfo(c.NatsUsername, c.NatsPassword))
+	} else {
+		Nats, err = nats.Connect(strings.Join(nats_, ","))
+	}
+
+	if err != nil {
+		log.Fatal("Can not connect to NATS:", nats_)
+	}
+
+	/*init jetstream*/
+	JetStream, err = Nats.JetStream()
+	if err != nil {
+		panic("Init: " + err.Error())
+	}
+
+	hosts := strings.Split(c.DBHost, ",")
+	DB = newDB(hosts, c.DBUsername, c.DBPassword, c.DBLocation)
+
+	Settings.init()
+
+	/*registration*/
+	//signal.Register(scyna_const.SETTING_UPDATE_CHANNEL+module, updateSettingHandler, signal.SCOPE_SESSION)
+	//signal.Register(scyna_const.SETTING_REMOVE_CHANNEL+module, removeSettingHandler, signal.SCOPE_SESSION)
+
+	RegisterSignal(scyna_const.SESSION_KILL_CHANNEL+module, KillSessionHandler, SCOPE_SESSION)
+
+	startAll()
+	log.Println("Scyna setup completed")
+}
+
+func KillSessionHandler(signal *scyna_proto.KillSessionSignal) {
+	if signal.Module == module && Session.id == signal.ID {
+		Session.Info("Kill session")
+		EmitSignal(scyna_const.SESSION_END_CHANNEL, &scyna_proto.EndSessionSignal{ID: Session.id, Module: Module(), Code: 0})
+
+		time.Sleep(1 * time.Second)
+		Session.release()
+		panic("Kill session")
+	}
+}

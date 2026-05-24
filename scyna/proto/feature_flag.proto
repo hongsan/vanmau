@@ -1,0 +1,30 @@
+syntax = "proto3";
+
+package scyna;
+option  java_package = "scyna.proto";
+option  java_multiple_files = true;
+option  csharp_namespace = "scyna.proto";
+option  go_package = "./;scyna_proto";
+option  optimize_for = CODE_SIZE;
+
+message AddFlagRequest 
+{
+	string Space = 1;
+	string Flag = 2;
+}
+
+message RemoveFlagRequest 
+{
+	string Space = 1;
+	string Flag = 2;
+}
+
+message ClearFlagRequest 
+{
+	string Space = 1;
+}
+
+message ListFlagRequest 
+{
+	string Space = 1;
+}

@@ -1,0 +1,24 @@
+syntax = "proto3";
+option  java_package = "base.user.cm.dto";
+option  java_multiple_files = true;
+option  csharp_namespace = "base.user.cm.dto";
+option  go_package = "./;dto";
+option  optimize_for = CODE_SIZE;
+
+import "google/protobuf/timestamp.proto";
+
+message ListUserRequest {}
+
+message ListUserResponse
+{
+    repeated UserData Users = 1;
+
+    message UserData
+    {
+        int64 UserID = 1;
+        string Name = 2;
+        string Email = 3;
+        google.protobuf.Timestamp AddedAt = 4;
+    }
+}
+

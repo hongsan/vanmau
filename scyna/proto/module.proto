@@ -1,0 +1,52 @@
+syntax = "proto3";
+
+package scyna;
+option  java_package = "scyna.proto";
+option  java_multiple_files = true;
+option  csharp_namespace = "scyna.proto";
+option  go_package = "./;scyna_proto";
+option  optimize_for = CODE_SIZE;
+
+message Config {
+  string NatsUrl = 1;
+  string NatsUsername = 2;
+  string NatsPassword = 3;
+  string DBHost = 4;
+  string DBUsername = 5;
+  string DBPassword = 6;
+  string DBLocation = 7;
+  string DBPemFile = 8;
+  bool isAWSKeyspaces = 9;
+}
+
+message Module {
+  string Code = 1;
+  string Name = 2;
+  string Description = 3;
+  Config Config = 4;
+  string Secret = 5;
+}
+
+message CreateModuleRequest {
+  string Code = 1;
+  string Secret = 2;
+  string Name = 3;
+  Config Config = 4;
+}
+
+message UpdateModuleConfigRequest {
+  string Code = 1;
+  Config Config = 2;
+}
+
+message UpdateModuleRequest {
+  string Code = 1;
+  string Name = 2;
+}
+
+message ListModuleRequest {
+}
+
+message ListModuleResponse {
+  repeated Module Items = 1;
+}

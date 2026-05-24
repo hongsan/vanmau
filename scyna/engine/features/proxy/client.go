@@ -1,0 +1,42 @@
+package proxy
+
+import (
+	"fmt"
+	"log"
+	"strconv"
+
+	"github.com/nats-io/nats.go"
+	scyna "github.com/scyna/core"
+	scyna_const "github.com/scyna/core/const"
+)
+
+type Client struct {
+	ID     string
+	Secret string
+}
+
+func (proxy *Proxy) initClients() {
+	proxy.Clients = proxy.loadClients()
+	_, err := scyna.Nats.Subscribe(scyna_const.CLIENT_UPDATE_CHANNEL, func(msg *nats.Msg) {
+		scyna.Session.Info("Reload Clients")
+		proxy.Clients = proxy.loadClients()
+	})
+	if err != nil {
+		fmt.Println("initClients: " + err.Error())
+	}
+}
+
+func (proxy *Proxy) loadClients() map[string]Client {
+	ret := make(map[string]Client)
+
+	scanner := scyna.DB.QueryMany("SELECT id, secret FROM " + scyna_const.CLIENT_TABLE)
+	for scanner.Next() {
+		var client Client
+		if err := scanner.Scan(&client.ID, &client.Secret); err != nil {
+			scyna.Session.Error("Load Clients fail: " + err.Error())
+		}
+		ret[client.ID] = client
+	}
+	log.Println("Load Clients: " + strconv.Itoa(len(ret)))
+	return ret
+}

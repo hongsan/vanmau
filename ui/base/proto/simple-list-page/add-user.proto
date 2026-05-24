@@ -1,0 +1,19 @@
+syntax = "proto3";
+option  java_package = "base.user.cm.dto";
+option  java_multiple_files = true;
+option  csharp_namespace = "base.user.cm.dto";
+option  go_package = "./;dto";
+option  optimize_for = CODE_SIZE;
+
+message AddUserRequest 
+{
+    string Name = 1;
+    string Email = 2;
+    string Password = 3;
+}
+
+message AddUserResponse
+{
+    int64 UserID = 1;
+}
+

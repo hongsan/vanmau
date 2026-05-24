@@ -1,0 +1,61 @@
+syntax = "proto3";
+
+package scyna;
+option  java_package = "scyna.proto";
+option  java_multiple_files = true;
+option  csharp_namespace = "scyna.proto";
+option  go_package = "./;scyna_proto";
+option  optimize_for = CODE_SIZE;
+
+import "google/protobuf/timestamp.proto";
+
+message AlertCreated {
+    google.protobuf.Timestamp   Created = 1;
+    string                      Key = 2;
+    string                      Module = 3;
+    string                      Title = 4;
+    string                      Message = 5;
+    AlertSeverity               Severity = 6; // Unknown, ShopDeleted, TeamRemoved
+}
+
+enum AlertSeverity {
+    DEFAULT = 0;
+    WARNING = 1;
+    ERROR = 2;
+}
+
+message AddAlertChannelRequest{
+    string Method = 1;
+    string Key = 2;
+}
+
+message ListAlertChannelRequest{
+
+}
+
+message ListAlertChannelResponse{
+    repeated AlertChannel Items = 1;
+
+    message AlertChannel {
+        string Method = 1;
+        string Key = 2;
+        repeated string Receivers = 3;
+    }
+}
+
+message RemoveAlertChannelRequest{
+    string Method = 1;
+    string Key = 2;
+}
+
+message AddReceiveToAlertChannelRequest{
+    string Method = 1;
+    string Key = 2;
+    repeated string Receivers = 3;
+}
+
+message RemoveReceiveToAlertChannelRequest{
+    string Method = 1;
+    string Key = 2;
+    repeated string Receivers = 3;
+}
