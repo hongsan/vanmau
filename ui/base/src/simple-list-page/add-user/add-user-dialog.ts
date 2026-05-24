@@ -52,8 +52,8 @@ export class AddUserDialog extends  SignalWatcher(LitElement) {
 					<div class="actions">
 						<wa-button 
 							appearance="accent" variant="danger" @click=${this.#onSaveClicked} 
-							?disabled=${this.store.addUserExecutor.loading.get()} pill>
-							${this.store.addUserExecutor.loading.get() ? 'Adding' : 'Add'}
+							?disabled=${this.store.addUserExecutor.loading.get()} pill
+							?loading=${this.store.addUserExecutor.loading.get()}>Add
 						</wa-button>
 					</div>
 				</div>

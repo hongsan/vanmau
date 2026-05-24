@@ -3,7 +3,10 @@ import { customElement} from 'lit/decorators.js';
 import { UserListStore } from './user-list-store';
 import { SignalWatcher } from '@lit-labs/signals';
 import { repeat } from 'lit/directives/repeat.js';
-import type { AddUserDialog } from './add-item/add-user-dialog';
+import type { AddUserDialog } from './add-user/add-user-dialog';
+import './add-user/add-user-dialog';
+import type { DeleteUserDialog } from './delete-user/delete-user-dialog';
+import './delete-user/delete-user-dialog';
 
 @customElement('user-list-page')
 export class UserListPage extends SignalWatcher(LitElement) {
@@ -18,6 +21,12 @@ export class UserListPage extends SignalWatcher(LitElement) {
 		const dialog = this.renderRoot.querySelector<AddUserDialog>('#add-user-dialog');
 		dialog?.open();
 	}
+
+	#onDeleteClicked(userID: bigint) {
+		console.log('Delete button clicked for userID:', userID);
+		const dialog = this.renderRoot.querySelector<DeleteUserDialog>('#delete-user-dialog');
+		dialog?.open(userID);
+	}	
 
 	renderBody() {
 		if (this.store.listUserFetcher.loading.get()) return html`
@@ -44,6 +53,7 @@ export class UserListPage extends SignalWatcher(LitElement) {
 						<div style="flex: 1;">Name</div>
 						<div style="width: 300px;">Email</div>
 						<div style="width: 200px;">Added At</div>
+						<div style="width: 50px;"></div>
 					</div>
 					<div class="table-body">
 						${repeat(this.store.users.get(), user => html`
@@ -51,7 +61,14 @@ export class UserListPage extends SignalWatcher(LitElement) {
 								<div style="flex: 1;">${user.Name}</div>
 								<div style="width: 300px;">${user.Email}</div>
 								<div style="width: 200px;">${user.AddedAt?.toDate().toLocaleString()}</div>
-							</div>`)}
+								<div style="width: 50px;">
+									<wa-button variant="danger" appearance="plain" size="small" pill 
+										@click=${() => this.#onDeleteClicked(user.UserID)}>
+										<wa-icon name="trash" ></wa-icon>
+									</wa-button>
+								</div>
+							</div>
+						`)}
 					</div>
 
 			</div>
@@ -71,6 +88,7 @@ export class UserListPage extends SignalWatcher(LitElement) {
 				${this.renderBody()}
 			</div>
 			<add-user-dialog id="add-user-dialog"></add-user-dialog>
+			<delete-user-dialog id="delete-user-dialog"></delete-user-dialog>
 		`;
 	}
 
@@ -146,13 +164,13 @@ export class UserListPage extends SignalWatcher(LitElement) {
 		font-family: sans-serif;
 		border-bottom: 1px solid var(--wa-color-gray-95);
 		height: 40px;
-		cursor: pointer;
+		//cursor: pointer;
 		color: var(--wa-color-gray-30);
 		font-size: 14px;
 	}
 
 	.table-row:hover {
-		background-color: var(--wa-color-gray-95);
+		background-color: var(--wa-color-red-95);
 	}
 `;
 

@@ -28,8 +28,8 @@ export class SideBar extends SignalWatcher(LitElement) {
 				<div class="sidebar-header">
 					<div class="logo-block">
 						<div class="logo-text">
-							<div class="logo-name">Base Web</div>
-							<div class="logo-sub">Portal</div>
+							<div class="logo-name">Văn mẫu</div>
+							<div class="logo-sub">You can find templates here</div>
 						</div>
 					</div>
 					<button class="collapse-button" @click=${this.toggleCollapsed}>
@@ -37,8 +37,8 @@ export class SideBar extends SignalWatcher(LitElement) {
 					</button>
 				</div>
 				<div class="menu-list">
-					<div class="section-title">${msg('View')}</div>
-					<menu-item .collapsed=${this.collapsed} page="/home/user-list-page" title=${msg('User List Page')} icon="diagram-project"></menu-item>
+					<div class="section-title">${msg('Pages')}</div>
+					<menu-item .collapsed=${this.collapsed} page="/home/user-list-page" title=${msg('Users')} icon="users"></menu-item>
 				</div>
 				<div class="sidebar-footer">
            <div class="user-section">

@@ -28,7 +28,7 @@ export function registerUserMocking() {
 			]
 		})));
 
-		//Mocking.register("base/user/add-user", Mocking.successExecutor(2000));
-		Mocking.register("base/user/add-user", Mocking.failEndpoint("Error", "Failed to add user", 2000));
+		Mocking.register("base/user/add-user", Mocking.successExecutor(2000));
+		//Mocking.register("base/user/add-user", Mocking.failEndpoint("Error", "Failed to add user", 2000));
 
 }
