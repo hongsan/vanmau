@@ -4,7 +4,7 @@ import { GetDeptResponse } from "../dto/proto/list-and-detail/get-dept_pb";
 
 export function registerDeptMocking() {
 
-	//Mocking.register("base/post/list-post", Mocking.failEndpoint("ListPostError","Fail to list posts"));
+	//Mocking.register("base/dept/list-dept", Mocking.failEndpoint("Error","Fail to list departments"));
 	//Mocking.register("base/dept/list-dept", Mocking.successFetcher(new ListDeptResponse()));
 	Mocking.register("base/dept/list-dept", Mocking.successFetcher(
 		new ListDeptResponse({
@@ -25,13 +25,14 @@ export function registerDeptMocking() {
 		}))
 	);
 
-	Mocking.register("base/dept/get-dept", Mocking.successFetcher(
-		new GetDeptResponse({
-			DeptID: BigInt(1),
-			Name: "Sample Department",
-			Description: "This is the first department.",
-			Location: "Building A",
-		}))
-	);
+	Mocking.register("base/dept/get-dept", Mocking.failEndpoint("Error","Fail to load department"));
+	// Mocking.register("base/dept/get-dept", Mocking.successFetcher(
+	// 	new GetDeptResponse({
+	// 		DeptID: BigInt(1),
+	// 		Name: "Sample Department",
+	// 		Description: "This is the first department.",
+	// 		Location: "Building A",
+	// 	}))
+	// );
 
 }
