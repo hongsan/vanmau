@@ -1,6 +1,6 @@
 import { LitElement, css, html } from 'lit';
 import { customElement} from 'lit/decorators.js';
-import { PostListStore } from './post-list-store';
+import { PostListStore } from './post-list-store.js';
 import { SignalWatcher } from '@lit-labs/signals';
 import { repeat } from 'lit/directives/repeat.js';
 import './post-search-page.js';
